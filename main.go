@@ -1,18 +1,32 @@
 package main
 
 import (
-	"github.com/BounkBU/doonangfangpleng/config"
-	"github.com/BounkBU/doonangfangpleng/httpserver"
+	"github.com/BounkBU/doonungfangpleng/config"
+	"github.com/BounkBU/doonungfangpleng/httpserver"
+	"github.com/BounkBU/doonungfangpleng/pkg/database"
+	"github.com/BounkBU/doonungfangpleng/pkg/logger"
+	log "github.com/sirupsen/logrus"
 )
 
-var appConfig *config.Config
+var serverConfig *config.Config
+var err error
 
 func init() {
-	appConfig = config.LoadConfig()
+	serverConfig, err = config.LoadConfig(".")
+	if err != nil {
+		log.Fatalf("error, loading config, %s", err.Error())
+	}
+
+	logger.InitLogger(serverConfig.App)
 }
 
 func main() {
-	server := httpserver.NewHTTPServer(appConfig)
+	db, err := database.NewMySQLDatabaseConnection(serverConfig.Database)
+	if err != nil {
+		log.Fatalf("error, create mysql database connection, %s", err.Error())
+	}
+
+	server := httpserver.NewHTTPServer(serverConfig, db)
 
 	server.Start()
 }
