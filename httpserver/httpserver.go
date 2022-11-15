@@ -4,6 +4,7 @@ import (
 	"github.com/BounkBU/doonungfangpleng/config"
 	_ "github.com/BounkBU/doonungfangpleng/docs"
 	"github.com/BounkBU/doonungfangpleng/handler"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/jmoiron/sqlx"
 	log "github.com/sirupsen/logrus"
@@ -40,6 +41,9 @@ func NewHTTPServer(config *config.Config, db *sqlx.DB) *Server {
 // @schemes http
 // @host localhost:8888
 func (server *Server) SetupRouter() {
+	// Enable cors request
+	server.App.Use(cors.Default())
+
 	server.App.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
 	healthcheckHandler := handler.NewHealthcheckHandler()
