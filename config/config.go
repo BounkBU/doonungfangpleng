@@ -1,8 +1,7 @@
 package config
 
 import (
-	"log"
-
+	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
 
@@ -37,17 +36,17 @@ func LoadConfig(path string) (*Config, error) {
 
 	err := viper.ReadInConfig()
 	if err != nil {
-		log.Fatalf("error, can't read config in .env file, %s", err.Error())
+		log.Errorf("error, can't read config in .env file, %s", err.Error())
 		return config, err
 	}
 
 	if err = viper.Unmarshal(&appConfig); err != nil {
-		log.Fatalf("error, can't parse app config, %s", err.Error())
+		log.Errorf("error, can't parse app config, %s", err.Error())
 		return config, err
 	}
 
 	if err = viper.Unmarshal(&databaseConfig); err != nil {
-		log.Fatalf("error, can't parse database config, %s", err.Error())
+		log.Errorf("error, can't parse database config, %s", err.Error())
 		return config, err
 	}
 
