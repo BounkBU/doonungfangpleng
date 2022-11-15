@@ -21,7 +21,7 @@ func init() {
 }
 
 func main() {
-	db, err := database.NewMySQLDatabaseConnection(serverConfig.Database)
+	db, err := database.NewMySQLDatabaseConnection(serverConfig)
 	if err != nil {
 		log.Fatalf("error, create mysql database connection, %s", err.Error())
 	}

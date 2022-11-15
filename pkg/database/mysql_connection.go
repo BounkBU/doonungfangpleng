@@ -8,8 +8,14 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func NewMySQLDatabaseConnection(config config.Database) (*sqlx.DB, error) {
-	mysqlUrl := util.NewConnectionUrlBuilder(config)
+func NewMySQLDatabaseConnection(config *config.Config) (*sqlx.DB, error) {
+	var stuff string
+	if config.App.Env == "production" {
+		stuff = "dns"
+	} else {
+		stuff = "mysql"
+	}
+	mysqlUrl := util.NewConnectionUrlBuilder(stuff, config.Database)
 	db, err := sqlx.Connect("mysql", mysqlUrl)
 	if err != nil {
 		log.Errorf("error, can't connect to database, %s", err.Error())
