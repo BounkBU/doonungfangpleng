@@ -6,7 +6,7 @@ name: Deploy to Heroku Hosting on merge
       - main
 
 jobs:
-  build-and-deploy:
+  build_and_deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Set up Go
@@ -15,7 +15,7 @@ jobs:
           go-version: 1.19
 
       - name: Check out code into the Go module directory
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       -name: Deploy to heroku
       - uses: akhileshns/heroku-deploy@v3.12.12
