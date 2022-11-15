@@ -1,10 +1,12 @@
 name: Deploy to Heroku Hosting on merge
+
 "on":
   push:
     branches:
       - main
+
 jobs:
-  build_and_deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Set up Go
@@ -13,20 +15,12 @@ jobs:
           go-version: 1.19
 
       - name: Check out code into the Go module directory
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v2
 
-      - name: Install git
-        run: |
-          sudo apt-get -y install git
-          which git
-
-      - name: Install heroku-cli
-        run: |
-          curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
-          which heroku
-
-      - name: Remote to heroku repository
-        run: heroku git:remote -a ${{ secrets.HEROKU_REPOSITORY }}
-
-      - name: Deploy to heroku
-        run: git push heroku main
+      -name: Deploy to heroku
+      - uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+          heroku_app_name: "doonungfangpleng"
+          heroku_email: "thanathip.suw@gmail.com"
+          usedocker: true
