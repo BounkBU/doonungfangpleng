@@ -1,8 +1,8 @@
 package httpserver
 
 import (
-	"github.com/BounkBU/doonangfangpleng/config"
-	"github.com/BounkBU/doonangfangpleng/handler"
+	"github.com/BounkBU/doonungfangpleng/config"
+	"github.com/BounkBU/doonungfangpleng/handler"
 	"github.com/gin-gonic/gin"
 )
 

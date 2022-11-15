@@ -3,8 +3,8 @@ package main
 import (
 	"log"
 
-	"github.com/BounkBU/doonangfangpleng/config"
-	"github.com/BounkBU/doonangfangpleng/httpserver"
+	"github.com/BounkBU/doonungfangpleng/config"
+	"github.com/BounkBU/doonungfangpleng/httpserver"
 )
 
 var appConfig *config.Config

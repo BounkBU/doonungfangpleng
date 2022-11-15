@@ -1,7 +1,7 @@
 package logger
 
 import (
-	"github.com/BounkBU/doonangfangpleng/config"
+	"github.com/BounkBU/doonungfangpleng/config"
 	"github.com/sirupsen/logrus"
 )
 
