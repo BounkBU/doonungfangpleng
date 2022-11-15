@@ -5,27 +5,51 @@ import (
 )
 
 type Config struct {
-	Env            string `mapstructure:"ENV"`
-	GinMode        string `mapstructure:"GIN_MODE" default:"release"`
-	ServerAddress  string `mapstructure:"SERVER_ADDRESS"`
-	MYSQL_HOSTNAME string `mapstructure:"MYSQL_HOSTNAME"`
-	MYSQL_PORT     string `mapstructure:"MYSQL_PORT"`
-	MYSQL_USERNAME string `mapstructure:"MYSQL_USERNAME"`
-	MYSQL_PASSWORD string `mapstructure:"MYSQL_PASSWORD"`
-	MYSQL_DATABASE string `mapstructure:"MYSQL_DATABASE"`
+	App      App
+	Database Database
 }
 
-func LoadConfig(path string) (config *Config, err error) {
+type App struct {
+	Env           string `mapstructure:"ENV"`
+	GinMode       string `mapstructure:"GIN_MODE" default:"release"`
+	ServerAddress string `mapstructure:"SERVER_ADDRESS"`
+}
+
+type Database struct {
+	Hostname string `mapstructure:"MYSQL_HOSTNAME"`
+	Port     string `mapstructure:"MYSQL_PORT"`
+	Username string `mapstructure:"MYSQL_USERNAME"`
+	Password string `mapstructure:"MYSQL_PASSWORD"`
+	Database string `mapstructure:"MYSQL_DATABASE"`
+}
+
+func LoadConfig(path string) (*Config, error) {
 	viper.AddConfigPath(path)
 	viper.SetConfigFile(".env")
 
 	viper.AutomaticEnv()
 
-	err = viper.ReadInConfig()
+	var appConfig App
+	var databaseConfig Database
+	var config *Config
+
+	err := viper.ReadInConfig()
 	if err != nil {
-		return
+		return config, err
 	}
 
-	err = viper.Unmarshal(&config)
-	return
+	if err = viper.Unmarshal(&appConfig); err != nil {
+		return config, err
+	}
+
+	if err = viper.Unmarshal(&databaseConfig); err != nil {
+		return config, err
+	}
+
+	config = &Config{
+		App:      appConfig,
+		Database: databaseConfig,
+	}
+
+	return config, nil
 }
