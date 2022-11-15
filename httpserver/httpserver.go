@@ -23,7 +23,7 @@ func NewHTTPServer(config *config.Config) *Server {
 func (server *Server) SetupRouter() {
 	healthcheckHandler := handler.NewHealthcheckHandler()
 
-	server.Gin.GET("/", healthcheckHandler.GetHealthcheck)
+	server.Gin.GET("/health", healthcheckHandler.GetHealthcheck)
 }
 
 func (server *Server) Start() {
