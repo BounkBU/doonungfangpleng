@@ -5,8 +5,8 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func InitLogger(config *config.Config) {
-	if config.Env == "prod" {
+func InitLogger(appConfig config.App) {
+	if appConfig.Env == "production" {
 		timeFormatLayout := "2006-01-02T15:04:05.000Z"
 		logrus.SetFormatter(&logrus.JSONFormatter{
 			FieldMap: logrus.FieldMap{
