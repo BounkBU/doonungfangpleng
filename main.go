@@ -5,20 +5,29 @@ import (
 
 	"github.com/BounkBU/doonungfangpleng/config"
 	"github.com/BounkBU/doonungfangpleng/httpserver"
+	"github.com/BounkBU/doonungfangpleng/pkg/database"
+	"github.com/BounkBU/doonungfangpleng/pkg/logger"
 )
 
-var appConfig *config.Config
+var serverConfig *config.Config
 var err error
 
 func init() {
-	appConfig, err = config.LoadConfig(".")
+	serverConfig, err = config.LoadConfig(".")
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	logger.InitLogger(serverConfig.App)
 }
 
 func main() {
-	server := httpserver.NewHTTPServer(appConfig)
+	db, err := database.NewMySQLDatabaseConnection(serverConfig.Database)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	server := httpserver.NewHTTPServer(serverConfig, db)
 
 	server.Start()
 }
