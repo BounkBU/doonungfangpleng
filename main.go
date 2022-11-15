@@ -9,13 +9,9 @@ import (
 )
 
 var serverConfig *config.Config
-var err error
 
 func init() {
-	serverConfig, err = config.LoadConfig(".")
-	if err != nil {
-		log.Fatalf("error, loading config, %s", err.Error())
-	}
+	serverConfig = config.LoadConfig()
 
 	logger.InitLogger(serverConfig.App)
 }

@@ -1,8 +1,9 @@
 package config
 
 import (
-	log "github.com/sirupsen/logrus"
-	"github.com/spf13/viper"
+	"os"
+
+	"github.com/joho/godotenv"
 )
 
 type Config struct {
@@ -24,37 +25,59 @@ type Database struct {
 	Database string `mapstructure:"MYSQL_DATABASE"`
 }
 
-func LoadConfig(path string) (*Config, error) {
-	viper.AddConfigPath(path)
-	viper.SetConfigFile(".env")
-
-	viper.AutomaticEnv()
+func LoadConfig() *Config {
+	_ = godotenv.Load(".env")
 
 	var appConfig App
 	var databaseConfig Database
-	var config *Config
 
-	err := viper.ReadInConfig()
-	if err != nil {
-		log.Errorf("error, can't read config in .env file, %s", err.Error())
-		return config, err
-	}
+	appConfig.Env = os.Getenv("ENV")
+	appConfig.GinMode = os.Getenv("GIN_MODE")
+	appConfig.ServerAddress = os.Getenv("SERVER_ADDRESS")
 
-	if err = viper.Unmarshal(&appConfig); err != nil {
-		log.Errorf("error, can't parse app config, %s", err.Error())
-		return config, err
-	}
+	databaseConfig.Hostname = os.Getenv("MYSQL_HOSTNAME")
+	databaseConfig.Port = os.Getenv("MYSQL_PORT")
+	databaseConfig.Username = os.Getenv("MYSQL_USERNAME")
+	databaseConfig.Password = os.Getenv("MYSQL_PASSWORD")
+	databaseConfig.Database = os.Getenv("MYSQL_DATABASE")
 
-	if err = viper.Unmarshal(&databaseConfig); err != nil {
-		log.Errorf("error, can't parse database config, %s", err.Error())
-		return config, err
-	}
-
-	config = &Config{
+	return &Config{
 		App:      appConfig,
 		Database: databaseConfig,
 	}
-
-	log.Println("Load config from .env file successfully")
-	return config, nil
 }
+
+// func LoadConfig(path string) (*Config, error) {
+// 	viper.AddConfigPath(path)
+// 	viper.SetConfigFile(".env")
+
+// 	viper.AutomaticEnv()
+
+// 	var appConfig App
+// 	var databaseConfig Database
+// 	var config *Config
+
+// 	err := viper.ReadInConfig()
+// 	if err != nil {
+// 		log.Errorf("error, can't read config in .env file, %s", err.Error())
+// 		return config, err
+// 	}
+
+// 	if err = viper.Unmarshal(&appConfig); err != nil {
+// 		log.Errorf("error, can't parse app config, %s", err.Error())
+// 		return config, err
+// 	}
+
+// 	if err = viper.Unmarshal(&databaseConfig); err != nil {
+// 		log.Errorf("error, can't parse database config, %s", err.Error())
+// 		return config, err
+// 	}
+
+// 	config = &Config{
+// 		App:      appConfig,
+// 		Database: databaseConfig,
+// 	}
+
+// 	log.Println("Load config from .env file successfully")
+// 	return config, nil
+// }
