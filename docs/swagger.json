@@ -1,0 +1,83 @@
+{
+    "schemes": [
+        "http"
+    ],
+    "swagger": "2.0",
+    "info": {
+        "description": "The Doonung-FangPleng web API",
+        "title": "Doonung-FangPleng API",
+        "contact": {
+            "name": "BounkBU Support",
+            "email": "thanathip.suw@gmail.com"
+        },
+        "license": {
+            "name": "MIT License",
+            "url": "https://choosealicense.com/licenses/mit/"
+        },
+        "version": "1.0"
+    },
+    "host": "localhost:8888",
+    "paths": {
+        "/": {
+            "get": {
+                "tags": [
+                    "healthcheck"
+                ],
+                "summary": "Get server information",
+                "operationId": "GetServerInformation",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.ServerInformation"
+                        }
+                    }
+                }
+            }
+        },
+        "/health": {
+            "get": {
+                "tags": [
+                    "healthcheck"
+                ],
+                "summary": "Healthcheck",
+                "operationId": "GetHealthcheck",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.MessageResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "model.MessageResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.ServerInformation": {
+            "type": "object",
+            "properties": {
+                "collaborator": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "project": {
+                    "type": "string"
+                },
+                "team": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

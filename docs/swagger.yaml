@@ -1,0 +1,54 @@
+definitions:
+  model.MessageResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  model.ServerInformation:
+    properties:
+      collaborator:
+        items:
+          type: string
+        type: array
+      project:
+        type: string
+      team:
+        type: string
+    type: object
+host: localhost:8888
+info:
+  contact:
+    email: thanathip.suw@gmail.com
+    name: BounkBU Support
+  description: The Doonung-FangPleng web API
+  license:
+    name: MIT License
+    url: https://choosealicense.com/licenses/mit/
+  title: Doonung-FangPleng API
+  version: "1.0"
+paths:
+  /:
+    get:
+      operationId: GetServerInformation
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.ServerInformation'
+      summary: Get server information
+      tags:
+      - healthcheck
+  /health:
+    get:
+      operationId: GetHealthcheck
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.MessageResponse'
+      summary: Healthcheck
+      tags:
+      - healthcheck
+schemes:
+- http
+swagger: "2.0"
