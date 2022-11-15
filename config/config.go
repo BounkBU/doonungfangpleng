@@ -12,9 +12,9 @@ type Config struct {
 }
 
 type App struct {
-	Env           string `mapstructure:"ENV"`
-	GinMode       string `mapstructure:"GIN_MODE" default:"release"`
-	ServerAddress string `mapstructure:"SERVER_ADDRESS"`
+	Env     string `mapstructure:"ENV"`
+	GinMode string `mapstructure:"GIN_MODE" default:"release"`
+	Port    string `mapstructure:"PORT"`
 }
 
 type Database struct {
@@ -33,7 +33,7 @@ func LoadConfig() *Config {
 
 	appConfig.Env = os.Getenv("ENV")
 	appConfig.GinMode = os.Getenv("GIN_MODE")
-	appConfig.ServerAddress = os.Getenv("SERVER_ADDRESS")
+	appConfig.Port = os.Getenv("PORT")
 
 	databaseConfig.Hostname = os.Getenv("MYSQL_HOSTNAME")
 	databaseConfig.Port = os.Getenv("MYSQL_PORT")

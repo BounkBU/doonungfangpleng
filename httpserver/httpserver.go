@@ -34,8 +34,8 @@ func (server *Server) SetupRouter() {
 func (server *Server) Start() {
 	server.SetupRouter()
 
-	serverAddress := server.Config.App.ServerAddress
+	port := server.Config.App.Port
 
-	log.Infof("Server is starting on server address: %s", serverAddress)
-	server.App.Run(serverAddress)
+	log.Infof("Server is starting on port : %s", port)
+	server.App.Run(":" + port)
 }
