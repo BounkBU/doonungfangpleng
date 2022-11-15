@@ -12,7 +12,7 @@ type Server struct {
 }
 
 func NewHTTPServer(config *config.Config) *Server {
-	gin.SetMode(gin.ReleaseMode)
+	gin.SetMode(config.GinMode)
 	app := gin.Default()
 	return &Server{
 		Gin:    app,
@@ -29,5 +29,5 @@ func (server *Server) SetupRouter() {
 
 func (server *Server) Start() {
 	server.SetupRouter()
-	server.Gin.Run(":" + server.Config.App.Port)
+	server.Gin.Run(server.Config.ServerAddress)
 }
