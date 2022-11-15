@@ -1,7 +1,7 @@
 server:
 	go run main.go
 
-deploy:
-	git push heroku main
+docs:
+	swag init -g httpserver/httpserver.go
 
-.PHONY: server deploy
+.PHONY: server docs
