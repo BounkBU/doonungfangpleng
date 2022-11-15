@@ -5,6 +5,7 @@ import (
 	"github.com/BounkBU/doonungfangpleng/handler"
 	"github.com/gin-gonic/gin"
 	"github.com/jmoiron/sqlx"
+	log "github.com/sirupsen/logrus"
 )
 
 type Server struct {
@@ -32,5 +33,9 @@ func (server *Server) SetupRouter() {
 
 func (server *Server) Start() {
 	server.SetupRouter()
-	server.App.Run(server.Config.App.ServerAddress)
+
+	serverAddress := server.Config.App.ServerAddress
+
+	log.Infof("Server is starting on server address: %s", serverAddress)
+	server.App.Run(serverAddress)
 }
