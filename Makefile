@@ -1,7 +1,22 @@
+MYSQL_HOSTNAME := 127.0.0.1
+MYSQL_PORT := 3306
+MYSQL_USERNAME := 
+MYSQL_PASSWORD := 
+MYSQL_DATABASE := doonungfangpleng
+
 server:
 	go run main.go
+
+deps:
+	go mod download
 
 docs:
 	swag init -g httpserver/httpserver.go
 
-.PHONY: server docs
+migrateup:
+	migrate -path pkg/database/migration -database "mysql://${MYSQL_USERNAME}:${MYSQL_PASSWORD}@tcp(${MYSQL_HOSTNAME}:${MYSQL_PORT})/${MYSQL_DATABASE}?parseTime=true" -verbose up
+
+migratedown:
+	migrate -path pkg/database/migration -database "mysql://${MYSQL_USERNAME}:${MYSQL_PASSWORD}@tcp(${MYSQL_HOSTNAME}:${MYSQL_PORT})/${MYSQL_DATABASE}?parseTime=true" -verbose down
+
+.PHONY: server deps docs migrateup migratedown
