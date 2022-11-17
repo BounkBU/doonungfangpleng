@@ -44,3 +44,8 @@ func (s *SearchMovieRepository) InsertSearchMovie(searchMovie model.CreateSearch
 	)
 	return err
 }
+
+func (s *SearchMovieRepository) UpdateSearchMovieSearchAmount(tmdbMovieId int) error {
+	_, err := s.db.Query("UPDATE search_movies SET search_amount = search_amount + 1 WHERE tmdb_movie_id=?", tmdbMovieId)
+	return err
+}
