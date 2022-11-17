@@ -7,3 +7,9 @@ func messageResponse(message string) model.MessageResponse {
 		Message: message,
 	}
 }
+
+func errorResponse(err error) model.ErrorResponse {
+	return model.ErrorResponse{
+		Error: err.Error(),
+	}
+}
