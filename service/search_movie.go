@@ -40,3 +40,16 @@ func (s *SearchMovieService) CreateOrUpdateSearchMovie(newSearchMovie model.Crea
 	err = s.searchMovieRepository.UpdateSearchMovieSearchAmount(searchMovie.TMDBMovieId)
 	return err
 }
+
+func (s *SearchMovieService) GetPopularSearchMovies() ([]model.SearchMovie, error) {
+	log.Info("Start getting new search movie")
+	defer log.Info("End getting new search movie")
+
+	searchMovies, err := s.searchMovieRepository.SelectPopularSearchMovies()
+	if err != nil {
+		log.Errorf("Error select popular search movies: %s", err.Error())
+		return searchMovies, err
+	}
+
+	return searchMovies, nil
+}
