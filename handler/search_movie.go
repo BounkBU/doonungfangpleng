@@ -18,6 +18,17 @@ func NewSearchMovieHandler(searchMovieService *service.SearchMovieService) *Sear
 	}
 }
 
+// CreateSearchMovieHandler godoc
+// @summary Create new search movie if does not exist, otherwise update search amount
+// @tags movies
+// @id CreateSearchMovie
+// @accept json
+// @produce json
+// @param SearchMovie body model.CreateSearchMovieRequest true "Search movie data to be created"
+// @response 200 {object} model.MessageResponse "OK"
+// @response 400 {object} model.ErrorResponse "Bad Request"
+// @response 500 {object} model.ErrorResponse "Internal Server Error"
+// @router /movies [post]
 func (h *SearchMovieHandler) CreateSearchMovieHandler(c *gin.Context) {
 	var req model.CreateSearchMovieRequest
 
@@ -36,6 +47,14 @@ func (h *SearchMovieHandler) CreateSearchMovieHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, messageResponse(response))
 }
 
+// GetPopularSearchMoviesHandler godoc
+// @summary Get search movies sorted by popularity
+// @tags movies
+// @id GetPopularSearchMovies
+// @produce json
+// @response 200 {array} model.SearchMovie "OK"
+// @response 500 {object} model.ErrorResponse "Internal Server Error"
+// @router /movies [get]
 func (h *SearchMovieHandler) GetPopularSearchMoviesHandler(c *gin.Context) {
 	searchMovies, err := h.searchMovieService.GetPopularSearchMovies()
 	if err != nil {
