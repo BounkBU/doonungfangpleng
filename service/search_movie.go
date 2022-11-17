@@ -29,6 +29,7 @@ func (s *SearchMovieService) CreateOrUpdateSearchMovie(newSearchMovie model.Crea
 	defer log.Info("End creating or updating new search movie")
 	searchMovie, err := s.searchMovieRepository.SelectSearchMovieByTMDBMovieId(newSearchMovie.TMDBMovieId)
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
+		log.Errorf("Error select search movie by tmdb_movie_id: %s", err.Error())
 		return err
 	}
 
