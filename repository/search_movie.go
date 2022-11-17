@@ -13,6 +13,7 @@ type SearchMovieRepositoryInterface interface {
 	SelectSearchMovieByTMDBMovieId(tmdbMovieId int) (searchMovie model.SearchMovie, err error)
 	InsertSearchMovie(searchMovie *model.SearchMovie) error
 	UpdateSearchMovieSearchAmount(tmdbMovieId int) error
+	SelectPopularSearchMovies() (searchMovies []model.SearchMovie, err error)
 }
 
 func NewSearchMovieRepository(db *sqlx.DB) *SearchMovieRepository {
@@ -49,4 +50,18 @@ func (s *SearchMovieRepository) InsertSearchMovie(searchMovie model.CreateSearch
 func (s *SearchMovieRepository) UpdateSearchMovieSearchAmount(tmdbMovieId int) error {
 	_, err := s.db.Query("UPDATE search_movies SET search_amount = search_amount + 1 WHERE tmdb_movie_id=?", tmdbMovieId)
 	return err
+}
+
+func (s *SearchMovieRepository) SelectPopularSearchMovies() ([]model.SearchMovie, error) {
+	var searchMovies []model.SearchMovie
+	err := s.db.Select(&searchMovies, `
+		SELECT * FROM search_movies
+		ORDER BY search_amount DESC
+		LIMIT 10
+	`)
+	if err != nil {
+		return searchMovies, err
+	}
+
+	return searchMovies, nil
 }
