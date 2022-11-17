@@ -22,7 +22,7 @@ func (h *SearchMovieHandler) CreateSearchMovieHandler(c *gin.Context) {
 	var req model.CreateSearchMovieRequest
 
 	if err := c.BindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, errorResponse(err))
+		c.JSON(http.StatusBadRequest, errorResponse(ErrInvalidRequestData))
 		return
 	}
 

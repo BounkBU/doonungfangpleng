@@ -1,6 +1,12 @@
 package handler
 
-import model "github.com/BounkBU/doonungfangpleng/models"
+import (
+	"errors"
+
+	model "github.com/BounkBU/doonungfangpleng/models"
+)
+
+var ErrInvalidRequestData error = errors.New("invalid request data")
 
 func messageResponse(message string) model.MessageResponse {
 	return model.MessageResponse{
