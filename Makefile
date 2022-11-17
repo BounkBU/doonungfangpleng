@@ -1,7 +1,7 @@
 MYSQL_HOSTNAME := 127.0.0.1
 MYSQL_PORT := 3306
-MYSQL_USERNAME := 
-MYSQL_PASSWORD := 
+MYSQL_USERNAME := root
+MYSQL_PASSWORD := secret
 MYSQL_DATABASE := doonungfangpleng
 
 server:
