@@ -32,8 +32,8 @@ func (s *SearchMovieRepository) SelectSearchMovieByTMDBMovieId(tmdbMovieId int) 
 
 func (s *SearchMovieRepository) InsertSearchMovie(searchMovie model.CreateSearchMovieRequest) error {
 	_, err := s.db.Query(`
-		INSERT INTO search_movies (tmdb_movie_id, title, overview, genres, image_path, release_date, rating, search_amount)
-		VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+		INSERT INTO search_movies (tmdb_movie_id, title, overview, genres, image_path, release_date, rating)
+		VALUES (?, ?, ?, ?, ?, ?, ?)
 	`,
 		searchMovie.TMDBMovieId,
 		searchMovie.Title,
@@ -42,7 +42,6 @@ func (s *SearchMovieRepository) InsertSearchMovie(searchMovie model.CreateSearch
 		searchMovie.ImagePath,
 		searchMovie.ReleaseDate,
 		searchMovie.Rating,
-		1,
 	)
 	return err
 }
