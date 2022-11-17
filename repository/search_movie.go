@@ -10,7 +10,9 @@ type SearchMovieRepository struct {
 }
 
 type SearchMovieRepositoryInterface interface {
+	SelectSearchMovieByTMDBMovieId(tmdbMovieId int) (searchMovie model.SearchMovie, err error)
 	InsertSearchMovie(searchMovie *model.SearchMovie) error
+	UpdateSearchMovieSearchAmount(tmdbMovieId int) error
 }
 
 func NewSearchMovieRepository(db *sqlx.DB) *SearchMovieRepository {
