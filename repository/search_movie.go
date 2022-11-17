@@ -27,3 +27,20 @@ func (s *SearchMovieRepository) SelectSearchMovieByTMDBMovieId(tmdbMovieId int) 
 
 	return searchMovie, nil
 }
+
+func (s *SearchMovieRepository) InsertSearchMovie(searchMovie model.CreateSearchMovieRequest) error {
+	_, err := s.db.Query(`
+		INSERT INTO search_movies (tmdb_movie_id, title, overview, genres, image_path, release_date, rating, search_amount)
+		VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+	`,
+		searchMovie.TMDBMovieId,
+		searchMovie.Title,
+		searchMovie.Overview,
+		searchMovie.Genres,
+		searchMovie.ImagePath,
+		searchMovie.ReleaseDate,
+		searchMovie.Rating,
+		1,
+	)
+	return err
+}
