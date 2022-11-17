@@ -54,6 +54,7 @@ func (server *Server) SetupRouter() {
 	searchMovieRepository := repository.NewSearchMovieRepository(server.Database)
 	searchMovieService := service.NewSearchMovieSearchService(searchMovieRepository)
 	searchMovieHandler := handler.NewSearchMovieHandler(searchMovieService)
+	server.App.GET("/movies", searchMovieHandler.GetPopularSearchMoviesHandler)
 	server.App.POST("/movies", searchMovieHandler.CreateSearchMovieHandler)
 }
 

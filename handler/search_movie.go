@@ -35,3 +35,13 @@ func (h *SearchMovieHandler) CreateSearchMovieHandler(c *gin.Context) {
 	response := "Create search movie successfully"
 	c.JSON(http.StatusOK, messageResponse(response))
 }
+
+func (h *SearchMovieHandler) GetPopularSearchMoviesHandler(c *gin.Context) {
+	searchMovies, err := h.searchMovieService.GetPopularSearchMovies()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
+	c.JSON(http.StatusOK, searchMovies)
+}
