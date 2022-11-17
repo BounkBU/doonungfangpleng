@@ -7,7 +7,7 @@ CREATE TABLE `search_movies` (
   `image_path` varchar(255),
   `release_date` varchar(255),
   `rating` float,
-  `search_amount` bigint NOT NULL,
+  `search_amount` bigint NOT NULL DEFAULT 1,
   `created_at` TIMESTAMP NOT NULL DEFAULT (now())
 );
 
