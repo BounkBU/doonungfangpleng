@@ -1,8 +1,53 @@
 definitions:
+  model.CreateSearchMovieRequest:
+    properties:
+      genres:
+        type: string
+      image_path:
+        type: string
+      overview:
+        type: string
+      rating:
+        type: number
+      release_date:
+        type: string
+      title:
+        type: string
+      tmdb_movie_id:
+        type: integer
+    type: object
+  model.ErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
   model.MessageResponse:
     properties:
       message:
         type: string
+    type: object
+  model.SearchMovie:
+    properties:
+      created_at:
+        type: string
+      genres:
+        type: string
+      id:
+        type: integer
+      image_path:
+        type: string
+      overview:
+        type: string
+      rating:
+        type: number
+      release_date:
+        type: string
+      search_amount:
+        type: integer
+      title:
+        type: string
+      tmdb_movie_id:
+        type: integer
     type: object
   model.ServerInformation:
     properties:
@@ -49,6 +94,55 @@ paths:
       summary: Healthcheck
       tags:
       - healthcheck
+  /movies:
+    get:
+      operationId: GetPopularSearchMovies
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.SearchMovie'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Get search movies sorted by popularity
+      tags:
+      - movies
+    post:
+      consumes:
+      - application/json
+      operationId: CreateSearchMovie
+      parameters:
+      - description: Search movie data to be created
+        in: body
+        name: SearchMovie
+        required: true
+        schema:
+          $ref: '#/definitions/model.CreateSearchMovieRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.MessageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Create new search movie if does not exist, otherwise update search
+        amount
+      tags:
+      - movies
 schemes:
 - http
 swagger: "2.0"
