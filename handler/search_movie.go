@@ -8,12 +8,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type SearchMovieHandler struct {
-	searchMovieService *service.SearchMovieService
+type searchMovieHandler struct {
+	searchMovieService service.SearchMovieService
 }
 
-func NewSearchMovieHandler(searchMovieService *service.SearchMovieService) *SearchMovieHandler {
-	return &SearchMovieHandler{
+func NewSearchMovieHandler(searchMovieService service.SearchMovieService) searchMovieHandler {
+	return searchMovieHandler{
 		searchMovieService: searchMovieService,
 	}
 }
@@ -29,7 +29,7 @@ func NewSearchMovieHandler(searchMovieService *service.SearchMovieService) *Sear
 // @response 400 {object} model.ErrorResponse "Bad Request"
 // @response 500 {object} model.ErrorResponse "Internal Server Error"
 // @router /movies [post]
-func (h *SearchMovieHandler) CreateSearchMovieHandler(c *gin.Context) {
+func (h *searchMovieHandler) CreateSearchMovieHandler(c *gin.Context) {
 	var req model.CreateSearchMovieRequest
 
 	if err := c.BindJSON(&req); err != nil {
@@ -55,7 +55,7 @@ func (h *SearchMovieHandler) CreateSearchMovieHandler(c *gin.Context) {
 // @response 200 {array} model.SearchMovie "OK"
 // @response 500 {object} model.ErrorResponse "Internal Server Error"
 // @router /movies [get]
-func (h *SearchMovieHandler) GetPopularSearchMoviesHandler(c *gin.Context) {
+func (h *searchMovieHandler) GetPopularSearchMoviesHandler(c *gin.Context) {
 	searchMovies, err := h.searchMovieService.GetPopularSearchMovies()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, errorResponse(err))

@@ -10,23 +10,25 @@ import (
 	"github.com/BounkBU/doonungfangpleng/repository"
 )
 
-type SearchMovieService struct {
-	searchMovieRepository *repository.SearchMovieRepository
+type searchMovieService struct {
+	searchMovieRepository repository.SearchMovieRepository
 }
 
-type SearchMovieServiceInterface interface {
+type SearchMovieService interface {
 	CreateOrUpdateSearchMovie(newSearchMovie model.CreateSearchMovieRequest) error
+	GetPopularSearchMovies() ([]model.SearchMovie, error)
 }
 
-func NewSearchMovieSearchService(searchMovieRepository *repository.SearchMovieRepository) *SearchMovieService {
-	return &SearchMovieService{
+func NewSearchMovieSearchService(searchMovieRepository repository.SearchMovieRepository) *searchMovieService {
+	return &searchMovieService{
 		searchMovieRepository: searchMovieRepository,
 	}
 }
 
-func (s *SearchMovieService) CreateOrUpdateSearchMovie(newSearchMovie model.CreateSearchMovieRequest) error {
+func (s *searchMovieService) CreateOrUpdateSearchMovie(newSearchMovie model.CreateSearchMovieRequest) error {
 	log.Info("Start creating or updating new search movie")
 	defer log.Info("End creating or updating new search movie")
+
 	searchMovie, err := s.searchMovieRepository.SelectSearchMovieByTMDBMovieId(newSearchMovie.TMDBMovieId)
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
 		log.Errorf("Error select search movie by tmdb_movie_id: %s", err.Error())
@@ -35,6 +37,7 @@ func (s *SearchMovieService) CreateOrUpdateSearchMovie(newSearchMovie model.Crea
 
 	if errors.Is(err, sql.ErrNoRows) {
 		err = s.searchMovieRepository.InsertSearchMovie(newSearchMovie)
+		log.Errorf("Error insert search: %s", err.Error())
 		return err
 	}
 
@@ -42,7 +45,7 @@ func (s *SearchMovieService) CreateOrUpdateSearchMovie(newSearchMovie model.Crea
 	return err
 }
 
-func (s *SearchMovieService) GetPopularSearchMovies() ([]model.SearchMovie, error) {
+func (s *searchMovieService) GetPopularSearchMovies() ([]model.SearchMovie, error) {
 	log.Info("Start getting new search movie")
 	defer log.Info("End getting new search movie")
 

@@ -5,24 +5,24 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-type SearchMovieRepository struct {
+type searchMovieRepository struct {
 	db *sqlx.DB
 }
 
-type SearchMovieRepositoryInterface interface {
+type SearchMovieRepository interface {
 	SelectSearchMovieByTMDBMovieId(tmdbMovieId int) (searchMovie model.SearchMovie, err error)
-	InsertSearchMovie(searchMovie *model.SearchMovie) error
+	InsertSearchMovie(searchMovie model.CreateSearchMovieRequest) error
 	UpdateSearchMovieSearchAmount(tmdbMovieId int) error
 	SelectPopularSearchMovies() (searchMovies []model.SearchMovie, err error)
 }
 
-func NewSearchMovieRepository(db *sqlx.DB) *SearchMovieRepository {
-	return &SearchMovieRepository{
+func NewSearchMovieRepository(db *sqlx.DB) *searchMovieRepository {
+	return &searchMovieRepository{
 		db: db,
 	}
 }
 
-func (s *SearchMovieRepository) SelectSearchMovieByTMDBMovieId(tmdbMovieId int) (searchMovie model.SearchMovie, err error) {
+func (s *searchMovieRepository) SelectSearchMovieByTMDBMovieId(tmdbMovieId int) (searchMovie model.SearchMovie, err error) {
 	err = s.db.Get(&searchMovie, "SELECT * from search_movies WHERE tmdb_movie_id=?", tmdbMovieId)
 	if err != nil {
 		return
@@ -31,7 +31,7 @@ func (s *SearchMovieRepository) SelectSearchMovieByTMDBMovieId(tmdbMovieId int) 
 	return searchMovie, nil
 }
 
-func (s *SearchMovieRepository) InsertSearchMovie(searchMovie model.CreateSearchMovieRequest) error {
+func (s *searchMovieRepository) InsertSearchMovie(searchMovie model.CreateSearchMovieRequest) error {
 	_, err := s.db.Query(`
 		INSERT INTO search_movies (tmdb_movie_id, title, overview, genres, image_path, release_date, rating)
 		VALUES (?, ?, ?, ?, ?, ?, ?)
@@ -47,12 +47,12 @@ func (s *SearchMovieRepository) InsertSearchMovie(searchMovie model.CreateSearch
 	return err
 }
 
-func (s *SearchMovieRepository) UpdateSearchMovieSearchAmount(tmdbMovieId int) error {
+func (s *searchMovieRepository) UpdateSearchMovieSearchAmount(tmdbMovieId int) error {
 	_, err := s.db.Query("UPDATE search_movies SET search_amount = search_amount + 1 WHERE tmdb_movie_id=?", tmdbMovieId)
 	return err
 }
 
-func (s *SearchMovieRepository) SelectPopularSearchMovies() ([]model.SearchMovie, error) {
+func (s *searchMovieRepository) SelectPopularSearchMovies() ([]model.SearchMovie, error) {
 	var searchMovies []model.SearchMovie
 	err := s.db.Select(&searchMovies, `
 		SELECT * FROM search_movies
