@@ -6,6 +6,7 @@ import (
 
 	model "github.com/BounkBU/doonungfangpleng/models"
 	"github.com/BounkBU/doonungfangpleng/repository"
+	log "github.com/sirupsen/logrus"
 )
 
 type tmdbService struct {
@@ -23,10 +24,16 @@ func NewTmdbService(tmdbRepository repository.TmdbRepository) *tmdbService {
 	}
 }
 
-func (t *tmdbService) GetPopularMovieFromTmdb(page int) ([]model.PopularTmdbMovieResponse, error) {
-	movies, err := t.tmdbRepository.QueryPopularMovies(page)
+func (t *tmdbService) GetPopularMovieFromTmdb(page int) (tmdbMovies []model.PopularTmdbMovieResponse, err error) {
+	log.Info("Start getting popular movies from tmdb api")
+	defer log.Info("End getting popular movies from tmdb api")
 
-	tmdbMovies := []model.PopularTmdbMovieResponse{}
+	movies, err := t.tmdbRepository.QueryPopularMovies(page)
+	if err != nil {
+		log.Errorf("Error query popular movies from tmdb api: %s", err.Error())
+		return movies, err
+	}
+
 	for _, movie := range movies {
 		tmdbMovie := model.PopularTmdbMovieResponse{
 			ID:         movie.ID,
@@ -39,16 +46,22 @@ func (t *tmdbService) GetPopularMovieFromTmdb(page int) ([]model.PopularTmdbMovi
 	return tmdbMovies, err
 }
 
-func (t *tmdbService) GetMovieDetailFromTmdb(movieId int) (model.TmdbMovieDetailResponse, error) {
+func (t *tmdbService) GetMovieDetailFromTmdb(movieId int) (tmdbMovie model.TmdbMovieDetailResponse, err error) {
+	log.Info("Start getting popular movies from tmdb api")
+	defer log.Info("End getting popular movies from tmdb api")
+
 	movie, err := t.tmdbRepository.QueryMovieDetails(movieId)
+	if err != nil {
+		log.Errorf("Error query movie detail with id: %d: %s", movieId, err.Error())
+		return
+	}
 
 	var genres []string
-
 	for _, genre := range movie.Genres {
 		genres = append(genres, genre.Name)
 	}
 
-	tmdbMovie := model.TmdbMovieDetailResponse{
+	tmdbMovie = model.TmdbMovieDetailResponse{
 		ID:           movie.ID,
 		Overview:     movie.Overview,
 		Genres:       strings.Join(genres, ", "),
