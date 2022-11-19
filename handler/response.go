@@ -7,6 +7,7 @@ import (
 )
 
 var ErrInvalidRequestData error = errors.New("invalid request data")
+var ErrInvalidQueryParam error = errors.New("invalid query parameter")
 
 func messageResponse(message string) model.MessageResponse {
 	return model.MessageResponse{
