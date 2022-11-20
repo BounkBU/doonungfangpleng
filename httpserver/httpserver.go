@@ -62,6 +62,8 @@ func (server *Server) SetupRouter() {
 	tmdbHandler := handler.NewTmdbHandler(tmdbService)
 	server.App.GET("/tmdb/movies", tmdbHandler.GetAllPopularMovieFromTmdbHandler)
 	server.App.GET("/tmdb/movie/:movieId", tmdbHandler.GetMovieDetailHandler)
+	server.App.GET("/tmdb/series", tmdbHandler.GetAllPopularSeriesFromTmdbHandler)
+	server.App.GET("/tmdb/serie/:serieId", tmdbHandler.GetSerieDetailHandler)
 }
 
 func (server *Server) Start() {
