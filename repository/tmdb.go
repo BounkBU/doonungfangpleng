@@ -13,8 +13,10 @@ type tmdbRepository struct {
 }
 
 type TmdbRepository interface {
-	QueryPopularMovies(page int) ([]model.PopularTmdbMovieResponse, error)
-	QueryMovieDetails(movieId int) (tmdbMovie model.TmdbMovieDetail, err error)
+	QueryPopularMovies(page int) ([]model.PopularTmdbResponse, error)
+	QueryMovieDetails(movieId int) (model.TmdbMovieDetailRequest, error)
+	QueryPopularSeries(page int) ([]model.PopularTmdbSerieRequest, error)
+	QuerySerieDetails(serieId int) (model.TmdbSerieDetailRequest, error)
 }
 
 func NewTmdbRepository(apiKey string) *tmdbRepository {
@@ -25,7 +27,7 @@ func NewTmdbRepository(apiKey string) *tmdbRepository {
 
 const TMDB_URL = "https://api.themoviedb.org/3"
 
-func (t *tmdbRepository) QueryPopularMovies(page int) (tmdbMovies []model.PopularTmdbMovieResponse, err error) {
+func (t *tmdbRepository) QueryPopularMovies(page int) (tmdbMovies []model.PopularTmdbResponse, err error) {
 	popularMovieUrl := fmt.Sprintf("%s/movie/popular?api_key=%s&language=en-US&page=%d", TMDB_URL, t.ApiKey, page)
 	responseData, err := util.FetchData(popularMovieUrl)
 	if err != nil {
@@ -42,7 +44,7 @@ func (t *tmdbRepository) QueryPopularMovies(page int) (tmdbMovies []model.Popula
 	return tmdbMovies, nil
 }
 
-func (t *tmdbRepository) QueryMovieDetails(movieId int) (tmdbMovie model.TmdbMovieDetail, err error) {
+func (t *tmdbRepository) QueryMovieDetails(movieId int) (tmdbMovie model.TmdbMovieDetailRequest, err error) {
 	movieDetailUrl := fmt.Sprintf("%s/movie/%d?api_key=%s&language=en-US", TMDB_URL, movieId, t.ApiKey)
 	responseData, err := util.FetchData(movieDetailUrl)
 	if err != nil {
@@ -54,4 +56,35 @@ func (t *tmdbRepository) QueryMovieDetails(movieId int) (tmdbMovie model.TmdbMov
 	}
 
 	return tmdbMovie, nil
+}
+
+func (t *tmdbRepository) QueryPopularSeries(page int) (tmdbSeries []model.PopularTmdbSerieRequest, err error) {
+	popularSerieUrl := fmt.Sprintf("%s/tv/popular?api_key=%s&language=en-US&page=%d", TMDB_URL, t.ApiKey, page)
+	responseData, err := util.FetchData(popularSerieUrl)
+	if err != nil {
+		return
+	}
+
+	data := model.PopularTmdbSerie{}
+	if err = json.Unmarshal(responseData, &data); err != nil {
+		return
+	}
+
+	tmdbSeries = data.Results
+
+	return tmdbSeries, nil
+}
+
+func (t *tmdbRepository) QuerySerieDetails(serieId int) (tmdbSerie model.TmdbSerieDetailRequest, err error) {
+	serieDetailUrl := fmt.Sprintf("%s/tv/%d?api_key=%s&language=en-US", TMDB_URL, serieId, t.ApiKey)
+	responseData, err := util.FetchData(serieDetailUrl)
+	if err != nil {
+		return
+	}
+
+	if err = json.Unmarshal(responseData, &tmdbSerie); err != nil {
+		return
+	}
+
+	return tmdbSerie, nil
 }
