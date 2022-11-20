@@ -14,8 +14,10 @@ type tmdbService struct {
 }
 
 type TmdbService interface {
-	GetPopularMovieFromTmdb(page int) ([]model.PopularTmdbMovieResponse, error)
+	GetPopularMovieFromTmdb(page int) ([]model.PopularTmdbResponse, error)
 	GetMovieDetailFromTmdb(movieId int) (model.TmdbMovieDetailResponse, error)
+	GetPopularSeriesFromTmdb(page int) ([]model.PopularTmdbResponse, error)
+	GetSerieDetailFromTmdb(movieId int) (model.TmdbSerieDetailResponse, error)
 }
 
 func NewTmdbService(tmdbRepository repository.TmdbRepository) *tmdbService {
@@ -24,7 +26,7 @@ func NewTmdbService(tmdbRepository repository.TmdbRepository) *tmdbService {
 	}
 }
 
-func (t *tmdbService) GetPopularMovieFromTmdb(page int) (tmdbMovies []model.PopularTmdbMovieResponse, err error) {
+func (t *tmdbService) GetPopularMovieFromTmdb(page int) (tmdbMovies []model.PopularTmdbResponse, err error) {
 	log.Info("Start getting popular movies from tmdb api")
 	defer log.Info("End getting popular movies from tmdb api")
 
@@ -35,7 +37,7 @@ func (t *tmdbService) GetPopularMovieFromTmdb(page int) (tmdbMovies []model.Popu
 	}
 
 	for _, movie := range movies {
-		tmdbMovie := model.PopularTmdbMovieResponse{
+		tmdbMovie := model.PopularTmdbResponse{
 			ID:         movie.ID,
 			Title:      movie.Title,
 			PosterPath: fmt.Sprintf("https://image.tmdb.org/t/p/w300_and_h450_bestv2%s", movie.PosterPath),
@@ -47,8 +49,8 @@ func (t *tmdbService) GetPopularMovieFromTmdb(page int) (tmdbMovies []model.Popu
 }
 
 func (t *tmdbService) GetMovieDetailFromTmdb(movieId int) (tmdbMovie model.TmdbMovieDetailResponse, err error) {
-	log.Info("Start getting popular movies from tmdb api")
-	defer log.Info("End getting popular movies from tmdb api")
+	log.Info("Start getting movie detail from tmdb api")
+	defer log.Info("End getting movie detail from tmdb api")
 
 	movie, err := t.tmdbRepository.QueryMovieDetails(movieId)
 	if err != nil {
@@ -73,4 +75,67 @@ func (t *tmdbService) GetMovieDetailFromTmdb(movieId int) (tmdbMovie model.TmdbM
 	}
 
 	return tmdbMovie, err
+}
+
+func (t *tmdbService) GetPopularSeriesFromTmdb(page int) (tmdbSeries []model.PopularTmdbResponse, err error) {
+	log.Info("Start getting movie detail from tmdb api")
+	defer log.Info("End getting movie detail from tmdb api")
+
+	series, err := t.tmdbRepository.QueryPopularSeries(page)
+	if err != nil {
+		log.Errorf("Error query popular series from tmdb api: %s", err.Error())
+		return
+	}
+
+	for _, movie := range series {
+		tmdbSerie := model.PopularTmdbResponse{
+			ID:         movie.ID,
+			Title:      movie.Name,
+			PosterPath: fmt.Sprintf("https://image.tmdb.org/t/p/w300_and_h450_bestv2%s", movie.PosterPath),
+		}
+		tmdbSeries = append(tmdbSeries, tmdbSerie)
+	}
+
+	return tmdbSeries, err
+}
+
+func (t *tmdbService) GetSerieDetailFromTmdb(movieId int) (tmdbSerie model.TmdbSerieDetailResponse, err error) {
+	log.Info("Start getting serie detail from tmdb api")
+	defer log.Info("End getting serie detail from tmdb api")
+
+	serie, err := t.tmdbRepository.QuerySerieDetails(movieId)
+	if err != nil {
+		log.Errorf("Error query movie detail with id: %d: %s", movieId, err.Error())
+		return
+	}
+
+	var genres []string
+	for _, genre := range serie.Genres {
+		genres = append(genres, genre.Name)
+	}
+
+	var seasons []model.Season
+	for _, season := range serie.Seasons {
+		season := model.Season{
+			Name:         season.Name,
+			AirDate:      season.AirDate,
+			EpisodeCount: season.EpisodeCount,
+			PosterPath:   fmt.Sprintf("https://image.tmdb.org/t/p/w130_and_h195_bestv2%s", serie.PosterPath),
+		}
+		seasons = append(seasons, season)
+	}
+
+	tmdbSerie = model.TmdbSerieDetailResponse{
+		ID:              serie.ID,
+		Title:           serie.Name,
+		BackdropPath:    fmt.Sprintf("https://www.themoviedb.org/t/p/w1920_and_h800_multi_faces%s", serie.BackdropPath),
+		Genres:          strings.Join(genres, ", "),
+		Overview:        serie.Overview,
+		ImagePath:       fmt.Sprintf("https://image.tmdb.org/t/p/w300_and_h450_bestv2%s", serie.PosterPath),
+		NumberOfSeasons: serie.NumberOfSeasons,
+		Seasons:         seasons,
+		Rating:          serie.VoteAverage,
+	}
+
+	return tmdbSerie, err
 }
