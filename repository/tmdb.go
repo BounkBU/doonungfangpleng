@@ -29,7 +29,7 @@ const TMDB_URL = "https://api.themoviedb.org/3"
 
 func (t *tmdbRepository) QueryPopularMovies(page int) (tmdbMovies []model.PopularTmdbResponse, err error) {
 	popularMovieUrl := fmt.Sprintf("%s/movie/popular?api_key=%s&language=en-US&page=%d", TMDB_URL, t.ApiKey, page)
-	responseData, err := util.FetchData(popularMovieUrl)
+	responseData, err := util.NewHTTPGetRequest(popularMovieUrl)
 	if err != nil {
 		return
 	}
@@ -46,7 +46,7 @@ func (t *tmdbRepository) QueryPopularMovies(page int) (tmdbMovies []model.Popula
 
 func (t *tmdbRepository) QueryMovieDetails(movieId int) (tmdbMovie model.TmdbMovieDetailRequest, err error) {
 	movieDetailUrl := fmt.Sprintf("%s/movie/%d?api_key=%s&language=en-US", TMDB_URL, movieId, t.ApiKey)
-	responseData, err := util.FetchData(movieDetailUrl)
+	responseData, err := util.NewHTTPGetRequest(movieDetailUrl)
 	if err != nil {
 		return
 	}
@@ -60,7 +60,7 @@ func (t *tmdbRepository) QueryMovieDetails(movieId int) (tmdbMovie model.TmdbMov
 
 func (t *tmdbRepository) QueryPopularSeries(page int) (tmdbSeries []model.PopularTmdbSerieRequest, err error) {
 	popularSerieUrl := fmt.Sprintf("%s/tv/popular?api_key=%s&language=en-US&page=%d", TMDB_URL, t.ApiKey, page)
-	responseData, err := util.FetchData(popularSerieUrl)
+	responseData, err := util.NewHTTPGetRequest(popularSerieUrl)
 	if err != nil {
 		return
 	}
@@ -77,7 +77,7 @@ func (t *tmdbRepository) QueryPopularSeries(page int) (tmdbSeries []model.Popula
 
 func (t *tmdbRepository) QuerySerieDetails(serieId int) (tmdbSerie model.TmdbSerieDetailRequest, err error) {
 	serieDetailUrl := fmt.Sprintf("%s/tv/%d?api_key=%s&language=en-US", TMDB_URL, serieId, t.ApiKey)
-	responseData, err := util.FetchData(serieDetailUrl)
+	responseData, err := util.NewHTTPGetRequest(serieDetailUrl)
 	if err != nil {
 		return
 	}

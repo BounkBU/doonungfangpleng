@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-func FetchData(url string) ([]byte, error) {
+func NewHTTPGetRequest(url string) ([]byte, error) {
 	response, err := http.Get(url)
 	if err != nil {
 		return nil, err
