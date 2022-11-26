@@ -12,9 +12,10 @@ type Config struct {
 }
 
 type App struct {
-	Env     string `mapstructure:"ENV"`
-	GinMode string `mapstructure:"GIN_MODE" default:"release"`
-	Port    string `mapstructure:"PORT"`
+	Env        string `mapstructure:"ENV"`
+	GinMode    string `mapstructure:"GIN_MODE" default:"release"`
+	Port       string `mapstructure:"PORT"`
+	TmdbApiKey string `mapstructure:"TMDB_API_KEY"`
 }
 
 type Database struct {
@@ -34,6 +35,7 @@ func LoadConfig() *Config {
 	appConfig.Env = os.Getenv("ENV")
 	appConfig.GinMode = os.Getenv("GIN_MODE")
 	appConfig.Port = os.Getenv("PORT")
+	appConfig.TmdbApiKey = os.Getenv("TMDB_API_KEY")
 
 	databaseConfig.Hostname = os.Getenv("MYSQL_HOSTNAME")
 	databaseConfig.Port = os.Getenv("MYSQL_PORT")
@@ -46,38 +48,3 @@ func LoadConfig() *Config {
 		Database: databaseConfig,
 	}
 }
-
-// func LoadConfig(path string) (*Config, error) {
-// 	viper.AddConfigPath(path)
-// 	viper.SetConfigFile(".env")
-
-// 	viper.AutomaticEnv()
-
-// 	var appConfig App
-// 	var databaseConfig Database
-// 	var config *Config
-
-// 	err := viper.ReadInConfig()
-// 	if err != nil {
-// 		log.Errorf("error, can't read config in .env file, %s", err.Error())
-// 		return config, err
-// 	}
-
-// 	if err = viper.Unmarshal(&appConfig); err != nil {
-// 		log.Errorf("error, can't parse app config, %s", err.Error())
-// 		return config, err
-// 	}
-
-// 	if err = viper.Unmarshal(&databaseConfig); err != nil {
-// 		log.Errorf("error, can't parse database config, %s", err.Error())
-// 		return config, err
-// 	}
-
-// 	config = &Config{
-// 		App:      appConfig,
-// 		Database: databaseConfig,
-// 	}
-
-// 	log.Println("Load config from .env file successfully")
-// 	return config, nil
-// }
